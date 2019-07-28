@@ -4,9 +4,6 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SQLite;
-using NDde.Client;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
 using System.Threading;
 
 using Model;
