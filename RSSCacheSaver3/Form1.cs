@@ -24,22 +24,46 @@ namespace RSSCacheSaver3
         private Thread _producer;
         private Thread _consumer;
 
+        private delegate void SafeCallDelegate(string text);
+
         // 起動オプション
         private Options opts = new Options();
 
         // 監視開始
         private void Main()
         {
-            Producer producer = new Producer(que, $"{txtCode.Text}.T");
+            string[] s = new string[] { $"{txtCode.Text}.T", "2121.T" };
+            Producer producer = new Producer(que, s);
             Consumer consumer = new Consumer(que);
+
+            consumer.Tick += new Consumer.TickEventHandler(this.Consumer_OnTick);
 
             _producer = new Thread(producer.Produce);
             _consumer = new Thread(consumer.Consume);
 
-
             _producer.Start();
             _consumer.Start();
         }
+
+        private void Consumer_OnTick(object sender, TickEventArgs e)
+        {
+            WriteTextbox(e.Message);
+        }
+        #region スレッドセーフなテキストボックス処理
+        private void WriteTextbox(string s)
+        {
+            if (textBox1.IsDisposed) { return; }
+            if (textBox1.InvokeRequired)
+            {
+                Invoke(new SafeCallDelegate(WriteLog), new object[] { s });
+            }
+
+        }
+        private void WriteLog(string s)
+        {
+            textBox1.AppendText($"{s}{Environment.NewLine}");
+        }
+        #endregion
 
         private void StopThread()
         {

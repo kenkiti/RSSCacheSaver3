@@ -136,6 +136,9 @@ namespace RSSCacheSaver3
             DateTime d_1500 = new DateTime(d.Year, d.Month, d.Day, 15, 00, 30); //年, 月, 日, 時間, 分, 秒
             DateTime d_1505 = new DateTime(d.Year, d.Month, d.Day, 15, 05, 00); //年, 月, 日, 時間, 分, 秒
 
+            var hoge = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+
             //現在の時間が設定の時間になった時の処理
             if ((d_1230 >= d & d >= d_1130) | (d_0900 >= d | d >= d_1500))
             {
