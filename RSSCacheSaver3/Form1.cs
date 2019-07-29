@@ -5,8 +5,10 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data.SQLite;
 using System.Threading;
+using System.Linq;
 
 using Model;
+using System.IO;
 
 namespace RSSCacheSaver3
 {
@@ -17,7 +19,7 @@ namespace RSSCacheSaver3
             InitializeComponent();
         }
 
-        private Model.Buffer que = new Model.Buffer(100);
+        private Model.Buffer que = new Model.Buffer(1000);
         private Thread _producer;
         private Thread _consumer;
 
@@ -29,8 +31,13 @@ namespace RSSCacheSaver3
         // 監視開始
         private void Main()
         {
-            string[] s = new string[] { $"{txtCode.Text}.T", "2121.T" };
-            Producer producer = new Producer(que, s);
+            // 監視する銘柄コードを配列で取得
+            //string[] s = new string[] { $"{txtCode.Text}.T", "9984.T", "7803.T" };
+            string[] arrayCodes = lstCodes.Items.OfType<string>().ToArray();
+
+            // Producer へは、キューと銘柄コードを渡す
+            Producer producer = new Producer(que, arrayCodes);
+            // Consumer へは、キューとSQLを渡す（TODO)
             Consumer consumer = new Consumer(que);
 
             consumer.Tick += new Consumer.TickEventHandler(this.Consumer_OnTick);
@@ -44,7 +51,10 @@ namespace RSSCacheSaver3
 
         private void Consumer_OnTick(object sender, TickEventArgs e)
         {
-            WriteTextbox(e.Message);
+            // TODO 
+            //invoke の書き方リファクタリング
+            var s = $"{e.Topic}";
+            WriteTextbox(s);
         }
         #region スレッドセーフなテキストボックス処理
         private void WriteTextbox(string s)
@@ -64,8 +74,11 @@ namespace RSSCacheSaver3
 
         private void StopThread()
         {
-            _producer.Abort();
-            _consumer.Abort();
+            if (_producer != null)
+            {
+                _producer.Abort();
+                _consumer.Abort();
+            }
         }
 
 
@@ -125,6 +138,8 @@ namespace RSSCacheSaver3
         // 自動処理
         private void Form1_Shown(object sender, EventArgs e)
         {
+            btnLoad_Click(sender, e);
+
             if (opts.AutoStart)
             {
                 btnStart_Click(sender, e);
@@ -135,6 +150,77 @@ namespace RSSCacheSaver3
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             StopThread();
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            lstCodes.Items.Add(txtCode.Text);
+            lsvCodes.Items.Add(txtCode.Text);
+        }
+
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            var i = lstCodes.SelectedIndex;
+            if (i>-1)
+            {
+                lstCodes.Items.RemoveAt(i);
+            }
+        }
+
+        // TEST
+        private void button1_Click(object sender, EventArgs e)
+        {
+            foreach(var item in lstCodes.Items)
+            {
+                textBox1.AppendText($"[{item}] ");
+            }
+            textBox1.AppendText($"{Environment.NewLine}");
+
+
+            var s = (Int64)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            textBox1.AppendText(
+                $"{s}" +
+                $"{Environment.NewLine}" +
+                $"{DateTimeOffset.FromUnixTimeMilliseconds(s).ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss.fff")}" +
+                $"{Environment.NewLine}");
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            const string sPath = "save.txt";
+
+            using (FileStream fs = new FileStream(sPath, FileMode.Open))
+            {
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
+                    foreach (var item in lstCodes.Items)
+                    {
+                        sw.WriteLine(item.ToString());
+                    }
+                }
+
+            }
+            MessageBox.Show("Programs saved!");
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            // TODO 
+            //リストビューに銘柄名称が表示されると良い
+            lstCodes.Items.Clear();
+
+            using (FileStream fs = new FileStream("save.txt", FileMode.Open))
+            {
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    while (sr.EndOfStream == false)
+                    {
+                        string line = sr.ReadLine();
+                        lstCodes.Items.Add(line);
+                    }
+                }
+            }
         }
     }
 }

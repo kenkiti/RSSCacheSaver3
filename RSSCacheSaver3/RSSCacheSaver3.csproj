@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{DA4BBFEF-DD66-471F-A2B1-5CD9D19EF56E}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>RSSCacheSaver2</RootNamespace>
-    <AssemblyName>RSSCacheSaver2</AssemblyName>
+    <RootNamespace>RSSCacheSaver3</RootNamespace>
+    <AssemblyName>RSSCacheSaver3</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -81,6 +81,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
