@@ -6,9 +6,11 @@ using System.Windows.Forms;
 using System.Data.SQLite;
 using System.Threading;
 using System.Linq;
-
-using Model;
 using System.IO;
+
+using Database;
+using Queue;
+using Model;
 
 namespace RSSCacheSaver3
 {
@@ -19,7 +21,7 @@ namespace RSSCacheSaver3
             InitializeComponent();
         }
 
-        private Model.Buffer que = new Model.Buffer(1000);
+        private Queue.Buffer que = new Queue.Buffer(1000);
         private Thread _producer;
         private Thread _consumer;
 
@@ -38,17 +40,27 @@ namespace RSSCacheSaver3
             // Producer へは、キューと銘柄コードを渡す
             Producer producer = new Producer(que, arrayCodes);
             // Consumer へは、キューとSQLを渡す（TODO)
-            Consumer consumer = new Consumer(que);
+            Database.Database db = new Database.Database();
+            Consumer consumer = new Consumer(que, db);
 
             consumer.Tick += new Consumer.TickEventHandler(this.Consumer_OnTick);
 
             _producer = new Thread(producer.Produce);
             _consumer = new Thread(consumer.Consume);
+            _producer.Name = "Producer";
+            _consumer.Name = "Consumer";
 
             _producer.Start();
             _consumer.Start();
         }
 
+        //// Utility:呼び出し元スレッドを無視してTextBoxに文字列を追加
+        //void AddMessage(string msg)
+        //{
+        //    textBox1.Invoke(new Action(() => {
+        //        textBox1.AppendText(msg + Environment.NewLine);
+        //    }));
+        //}
         private void Consumer_OnTick(object sender, TickEventArgs e)
         {
             // TODO 

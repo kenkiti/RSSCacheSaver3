@@ -4,24 +4,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
-
 using Model;
 
 namespace Database
 {
+
+    public class Database
+    {
+
+        public void CreateDatabase(string code)
+        {
+            // TODO
+        }
+
+        public void Insert()
+        {
+            // TODO
+
+        }
+
+
+    }
+
     public class SQLite
     {
         private SQLiteConnection _connection;
         private long _prevVolume = 0;
         private long _tick = 0;
 
-        private Dictionary<string, string> _item = new RSS().DictionaryItem;
+        //private Dictionary<string, string> _item = new RSS().DictionaryItem;
 
         /// <summary>
         /// 日毎のデータベースを作成する
         /// </summary>
         /// <param name="code"></param>
-        private void CreateDatabase(string code)
+        private void OpenCreateDatabase(string code)
         {
             string path = $"{DateTime.Now.ToString("yyyyMMdd")}_RSS3_{code}.db"; ;
             System.Diagnostics.Debug.WriteLine($"{path}");
@@ -53,11 +70,17 @@ namespace Database
             _connection = new SQLiteConnection($"Data Source={path}");
         }
 
-        public void CaluculateTick(Bottle args)
+        public void Insert(TickEventArgs e)
         {
-            string raw = Encoding.Default.GetString(args.Data).Trim('\0', ' ').ToString();
+            using (SQLiteCommand cmd = _connection.CreateCommand())
+            {
+                string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                cmd.CommandText =
+                                $"insert into rss(Time,Item,Value) values ('{now}','{e.Price}','{e.Volume}')";
+                cmd.ExecuteNonQuery();
 
-
+            }
         }
+
     }
 }

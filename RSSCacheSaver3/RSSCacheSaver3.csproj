@@ -98,9 +98,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Model\Model.csproj">
-      <Project>{85f4513f-7e07-4018-998a-b22559ef1a0c}</Project>
+    <ProjectReference Include="..\Database\Database.csproj">
+      <Project>{517c1faf-df2b-44ce-b2b0-68f42031653c}</Project>
+      <Name>Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{c0b41a7a-fa6c-4502-8fee-e75a57a605ea}</Project>
       <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Queue\Queue.csproj">
+      <Project>{2f5b39db-aa1b-4b14-978b-5aeb10a74ba9}</Project>
+      <Name>Queue</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
