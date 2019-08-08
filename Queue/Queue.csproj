@@ -47,6 +47,7 @@
     <Compile Include="Buffer.cs" />
     <Compile Include="Consumer.cs" />
     <Compile Include="Producer.cs" />
+    <Compile Include="Bridge.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

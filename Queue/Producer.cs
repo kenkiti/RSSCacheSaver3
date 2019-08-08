@@ -32,7 +32,7 @@ namespace Queue
             _running = true;
 
             _client = new DdeClient[_codes.Length];
-            var item = new RSS().DictionaryItem;
+            var item = new RSSMapper().DictionaryItem;
 
             try
             {
@@ -81,7 +81,7 @@ namespace Queue
              "IsServerInitiated=" + args.IsServerInitiated.ToString() + " " +
              "IsDisposed=" + args.IsDisposed.ToString());
 
-            var item = new RSS().DictionaryItem;
+            var item = new RSSMapper().DictionaryItem;
 
             // 再接続を試みる
             DdeClient c = sender as DdeClient;

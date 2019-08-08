@@ -70,7 +70,7 @@ namespace Database
             _connection = new SQLiteConnection($"Data Source={path}");
         }
 
-        public void Insert(TickEventArgs e)
+        public void InsertValue(TickEventArgs e)
         {
             using (SQLiteCommand cmd = _connection.CreateCommand())
             {

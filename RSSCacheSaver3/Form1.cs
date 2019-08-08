@@ -22,6 +22,7 @@ namespace RSSCacheSaver3
         }
 
         private Queue.Buffer que = new Queue.Buffer(1000);
+        private Queue.BufferTick queTick = new Queue.BufferTick(1000);
         private Thread _producer;
         private Thread _consumer;
 
@@ -37,10 +38,11 @@ namespace RSSCacheSaver3
             //string[] s = new string[] { $"{txtCode.Text}.T", "9984.T", "7803.T" };
             string[] arrayCodes = lstCodes.Items.OfType<string>().ToArray();
 
-            // Producer へは、キューと銘柄コードを渡す
-            Producer producer = new Producer(que, arrayCodes);
             // Consumer へは、キューとSQLを渡す（TODO)
             Database.Database db = new Database.Database();
+
+            // Producer へは、キューと銘柄コードを渡す
+            Producer producer = new Producer(que, arrayCodes);
             Consumer consumer = new Consumer(que, db);
 
             consumer.Tick += new Consumer.TickEventHandler(this.Consumer_OnTick);
@@ -65,9 +67,14 @@ namespace RSSCacheSaver3
         {
             // TODO 
             //invoke の書き方リファクタリング
-            var s = $"{e.Topic}";
-            WriteTextbox(s);
-        }
+            //var s = $"{e.Topic}";
+            //WriteTextbox(s);
+
+            textBox1.Invoke(new Action(() =>
+            {
+                textBox1.AppendText($"{e.Topic} + {Environment.NewLine}");
+                }));
+            }
         #region スレッドセーフなテキストボックス処理
         private void WriteTextbox(string s)
         {

@@ -15,19 +15,31 @@ namespace Model
         public string Data { get; set; }
     }
 
+    public struct TickBottle
+    {
+        public string Topic;
+        public Int64 Time;
+        public double Price;
+        public long Volume;
+        public string Kind;
+        public double Vwap;
+        public double Bid;
+        public double Ask;
+    }
+
     public class TickEventArgs : EventArgs
     {
         public string Topic;
-        public string Time;
-        public string Price;
-        public string Volume;
+        public Int64 Time;
+        public double Price;
+        public long Volume;
         public string Kind;
-        public string Vwap;
-        public string Bid;
-        public string Ask;
+        public double Vwap;
+        public double Bid;
+        public double Ask;
     }
 
-    public class RSS
+    public class RSSMapper
     {
         public Dictionary<string, string> DictionaryItem = new Dictionary<string, string>()
             {
@@ -40,11 +52,18 @@ namespace Model
                 { "出来高加重平均", ""},
             };
 
-
-        public void CaluculateTick(Bottle args)
+        public TickEventArgs InitializeTick(TickEventArgs e)
         {
-            //string raw = Encoding.Default.GetString(args.Data).Trim('\0', ' ').ToString();
-
+            e.Topic = "";
+            e.Time = 0;
+            e.Price = 0;
+            e.Volume = 0;
+            e.Kind = "";
+            e.Vwap = 0;
+            e.Bid = 0;
+            e.Ask = 0;
+            return e;
         }
+
     }
 }
