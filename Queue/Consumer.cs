@@ -44,8 +44,7 @@ namespace Queue
             Console.WriteLine("consumer runnning: ");
             string decode(byte[] d) => Encoding.Default.GetString(d).Trim('\0', ' ').ToString();
             
-
-            //
+                        //
             // ENABLES THE WHILE LOOP
             //_running = true;
             while (true)
