@@ -10,7 +10,7 @@ namespace Queue
     {
         //
         // BUFFER TO CONSUME FROM
-        private Buffer _buffer;
+        private BufferTick _buffer;
         private TickEventArgs[] _ticks = { new TickEventArgs(), new TickEventArgs()};
         private Dictionary<string, string> _item = new RSSMapper().DictionaryItem;
 
@@ -51,7 +51,7 @@ namespace Queue
             {
                 //
                 // CONSUME BOTTLE FROM BUFFER
-                Bottle bottle = _buffer.TakeFromBuffer();
+                TickBottle bottle = _buffer.TakeFromBuffer();
                 bottle.Data = decode(bottle.RawData);
 
                 string k = $"{bottle.Item}";
