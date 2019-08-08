@@ -34,7 +34,7 @@ namespace Queue
 
         //
         // CONSTRUCTOR
-        public Consumer(Buffer buffer, Database.Database db)
+        public Consumer(BufferTick buffer, Database.Database db)
         {
             _buffer = buffer;
         }
@@ -44,7 +44,7 @@ namespace Queue
             Console.WriteLine("consumer runnning: ");
             string decode(byte[] d) => Encoding.Default.GetString(d).Trim('\0', ' ').ToString();
             
-                        //
+            //
             // ENABLES THE WHILE LOOP
             //_running = true;
             while (true)
@@ -101,7 +101,6 @@ namespace Queue
             e.Topic = $"取ってきたよ：{bottle.Item}=>{bottle.Data}";
             //イベントの発生
             OnTick(e);
-
         }
 
         public void StopConsumer()
@@ -111,7 +110,4 @@ namespace Queue
             _running = false;
         }
     }
-
-
-
 }

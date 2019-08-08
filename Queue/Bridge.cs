@@ -6,7 +6,7 @@ using Model;
 
 namespace Queue
 {
-    class Bridge
+    public class Bridge
     {
         //
         // BUFFER TO CONSUME FROM
@@ -20,7 +20,6 @@ namespace Queue
         //
         // BOOLEAN TO MAKE THREAD KEEP ACTIVE
         private bool _running;
-
 
         //
         // CONSTRUCTOR
