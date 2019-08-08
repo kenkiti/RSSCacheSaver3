@@ -220,7 +220,7 @@ namespace RSSCacheSaver3
                 }
 
             }
-            MessageBox.Show("Programs saved!");
+            MessageBox.Show("Programs saved!!");
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
