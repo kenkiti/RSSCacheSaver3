@@ -34,12 +34,16 @@ namespace Queue
             _client = new DdeClient[_codes.Length];
             var item = new RSSMapper().DictionaryItem;
 
+            Console.WriteLine($"Start Advise：{_codes.Length}");
+
             try
             {
                 for (int i = 0; i < _codes.Length; i++)
                 {
-                    // 監視開始
-                    _client[i] = new DdeClient("RSS", $"{_codes[i]}.T");
+                Console.WriteLine($"Start Advise：{_codes[i]}");
+
+                // 監視開始
+                _client[i] = new DdeClient("RSS", $"{_codes[i]}.T");
                     //_client[i] = new DdeClient("RSS", $"{_codes[i]}.T");
                     _client[i].Disconnected += new EventHandler<DdeDisconnectedEventArgs>(OnDisconnected);
                     _client[i].Connect();
@@ -48,10 +52,9 @@ namespace Queue
                         _client[i].StartAdvise(key, 1, true, 60000);
                     }
                     _client[i].Advise += new EventHandler<DdeAdviseEventArgs>(OnAdvise);
-                    Console.WriteLine($"Start Advise：{_codes[i]}");
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine($"RSS起動してないのでは：{e}");
                 throw;
@@ -63,7 +66,8 @@ namespace Queue
             // PRODUCE NEW BOTTLE
             Bottle bottle = new Bottle();
             bottle.Topic = (sender as DdeClient).Topic;
-            bottle.Time = (Int64)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            bottle.Time = CurrentTimeGetter.Now.ToString();
+            //bottle.Time = (Int64)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             bottle.Item = args.Item;
             bottle.RawData = args.Data;
             //
@@ -81,30 +85,58 @@ namespace Queue
              "IsServerInitiated=" + args.IsServerInitiated.ToString() + " " +
              "IsDisposed=" + args.IsDisposed.ToString());
 
-            var item = new RSSMapper().DictionaryItem;
+           // var item = new RSSMapper().DictionaryItem;
 
-            // 再接続を試みる
-            DdeClient c = sender as DdeClient;
-            var topic = c.Topic;
-            try
+           // 再接続を試みる
+           //DdeClient c = sender as DdeClient;
+           // var topic = c.Topic;
+           // try
+           // {
+           //     監視開始
+           //    c = new DdeClient("RSS", $"{topic}");
+           //     c.Disconnected += new EventHandler<DdeDisconnectedEventArgs>(OnDisconnected);
+           //     c.Connect();
+           //     foreach (string key in item.Keys)
+           //     {
+           //         c.StartAdvise(key, 1, true, 60000);
+           //     }
+           //     c.Advise += new EventHandler<DdeAdviseEventArgs>(OnAdvise);
+           // }
+           // catch (Exception e)
+           // {
+           //     Console.WriteLine($"再接続できません：{e}");
+           //     throw;
+           // }
+
+
+        }
+
+    }
+
+    internal class CurrentTimeGetter
+    {
+        private static int lastTicks = -1;
+        private static DateTime lastDateTime = DateTime.MinValue;
+
+        /// <summary>        
+        /// Gets the current time in an optimized fashion.        
+        /// </summary>        
+        /// <value>Current time.</value>        
+
+        public static DateTime Now
+        {
+            get
             {
-                    // 監視開始
-                    c = new DdeClient("RSS", $"{topic}");
-                    c.Disconnected += new EventHandler<DdeDisconnectedEventArgs>(OnDisconnected);
-                    c.Connect();
-                    foreach (string key in item.Keys)
-                    {
-                        c.StartAdvise(key, 1, true, 60000);
-                    }
-                    c.Advise += new EventHandler<DdeAdviseEventArgs>(OnAdvise);
+                int tickCount = Environment.TickCount;
+                if (tickCount == lastTicks)
+                {
+                    return lastDateTime;
+                }
+                DateTime dt = DateTime.Now;
+                lastTicks = tickCount;
+                lastDateTime = dt;
+                return dt;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine($"再接続できません：{e}");
-                //throw;
-            }
-
-
         }
     }
 

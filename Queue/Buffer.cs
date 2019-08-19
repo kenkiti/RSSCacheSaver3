@@ -44,7 +44,7 @@ namespace Queue
                 //
                 // ADD OBJECT TO BUFFER
                 _queue.Add(bottle);
-                WriteLine($"Bottle Added:{_queue.Count} {bottle.Topic} => {bottle.Item}");
+                //WriteLine($"Bottle Added:{_queue.Count} {bottle.Topic} => {bottle.Item}");
             }
         }
 
@@ -69,7 +69,7 @@ namespace Queue
                 {
                     bottle = _queue[0];
                     _queue.RemoveAt(0);
-                    WriteLine($"Bottle Taken: {bottle.Topic}  / {_queue.Count}");
+                    WriteLine($"{bottle.Time}: Bottle Taken: {bottle.Topic} {bottle.Item} /{_queue.Count}");
                 }
             }
             return bottle;

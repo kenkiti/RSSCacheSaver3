@@ -21,8 +21,8 @@ namespace RSSCacheSaver3
             InitializeComponent();
         }
 
-        private Queue.Buffer que = new Queue.Buffer(1000);
-        private Queue.BufferTick queTick = new Queue.BufferTick(1000);
+        private Queue.Buffer que = new Queue.Buffer(100);
+        private Queue.BufferTick queTick = new Queue.BufferTick(100);
         private Thread _producer;
         private Thread _consumer;
 
@@ -35,8 +35,9 @@ namespace RSSCacheSaver3
         private void Main()
         {
             // 監視する銘柄コードを配列で取得
-            //string[] s = new string[] { $"{txtCode.Text}.T", "9984.T", "7803.T" };
+            //string[] arrayCodes = new string[] { $"{txtCode.Text}.T", "9984.T", "7803.T" };
             string[] arrayCodes = lstCodes.Items.OfType<string>().ToArray();
+            Console.WriteLine("arraycodes=>" + string.Join(",", arrayCodes));
 
             // Consumer へは、キューとSQLを渡す（TODO)
             Database.Database db = new Database.Database();
@@ -56,40 +57,14 @@ namespace RSSCacheSaver3
             _consumer.Start();
         }
 
-        //// Utility:呼び出し元スレッドを無視してTextBoxに文字列を追加
-        //void AddMessage(string msg)
-        //{
-        //    textBox1.Invoke(new Action(() => {
-        //        textBox1.AppendText(msg + Environment.NewLine);
-        //    }));
-        //}
         private void Consumer_OnTick(object sender, TickEventArgs e)
         {
-            // TODO 
-            //invoke の書き方リファクタリング
-            //var s = $"{e.Topic}";
-            //WriteTextbox(s);
-
+            string s = $"{e.Time}:[{e.Topic}] =>,{e.Price}, {e.Volume}";  
             textBox1.Invoke(new Action(() =>
             {
-                textBox1.AppendText($"{e.Topic} + {Environment.NewLine}");
-                }));
-            }
-        #region スレッドセーフなテキストボックス処理
-        private void WriteTextbox(string s)
-        {
-            if (textBox1.IsDisposed) { return; }
-            if (textBox1.InvokeRequired)
-            {
-                Invoke(new SafeCallDelegate(WriteLog), new object[] { s });
-            }
-
+                textBox1.AppendText($"{s}{Environment.NewLine}");
+            }));
         }
-        private void WriteLog(string s)
-        {
-            textBox1.AppendText($"{s}{Environment.NewLine}");
-        }
-        #endregion
 
         private void StopThread()
         {

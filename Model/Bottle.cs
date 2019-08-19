@@ -9,7 +9,7 @@ namespace Model
     public struct Bottle
     {
         public string Topic { get; set; }
-        public Int64 Time { get; set; }
+        public string Time { get; set; }
         public string Item { get; set; }
         public Byte[] RawData { get; set; }
         public string Data { get; set; }
@@ -30,9 +30,10 @@ namespace Model
     public class TickEventArgs : EventArgs
     {
         public string Topic;
-        public Int64 Time;
+        public string Time;
         public double Price;
         public long Volume;
+        public long VolumeP;
         public string Kind;
         public double Vwap;
         public double Bid;
@@ -43,10 +44,16 @@ namespace Model
     {
         public Dictionary<string, string> DictionaryItem = new Dictionary<string, string>()
             {
-                { "最良売気配値１", ""},
-                { "最良買気配値１", ""},
-                { "最良買気配数量１", ""},
+                { "最良売気配値１", "" },
                 { "最良売気配数量１", ""},
+                //{ "最良売気配値", "" },
+                //{ "最良売気配数量", "" },
+
+                { "最良買気配値１", ""},
+                { "最良買気配数量１", "" },
+                //{ "最良買気配値", "" },
+                //{ "最良買気配数量", "" },
+
                 { "現在値", ""},
                 { "出来高", ""},
                 { "出来高加重平均", ""},
@@ -55,7 +62,7 @@ namespace Model
         public TickEventArgs InitializeTick(TickEventArgs e)
         {
             e.Topic = "";
-            e.Time = 0;
+            e.Time = "";
             e.Price = 0;
             e.Volume = 0;
             e.Kind = "";
