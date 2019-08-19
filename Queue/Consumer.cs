@@ -33,7 +33,7 @@ namespace Queue
 
         //
         // CONSTRUCTOR
-        public Consumer(BufferTick buffer, Database.Database db)
+        public Consumer(Buffer buffer, Database.Database db)
         {
             _buffer = buffer;
         }
