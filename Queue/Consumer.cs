@@ -11,7 +11,6 @@ namespace Queue
         //
         // BUFFER TO CONSUME FROM
         private Buffer _buffer;
-        private TickEventArgs[] _ticks = { new TickEventArgs(), new TickEventArgs()};
         private Dictionary<string, string> _item = new RSSMapper().DictionaryItem;
         private Dictionary<string, TickEventArgs> _topic = new Dictionary<string, TickEventArgs>();
 
@@ -51,8 +50,9 @@ namespace Queue
                 //
                 // CONSUME BOTTLE FROM BUFFER
                 Bottle bottle = _buffer.TakeFromBuffer();
-                bottle.Data = decode(bottle.RawData);
-
+                if (bottle.RawData == null) { continue; }
+                bottle.Data = Encoding.Default.GetString(bottle.RawData).Trim('\0', ' ').ToString();
+                string t = $"{bottle.Topic}";
                 string k = $"{bottle.Item}";
                 string v = $"{bottle.Data}";
 
@@ -98,16 +98,6 @@ namespace Queue
                         break;
                 }
             }
-        }
-
-        public void CaluculateTick(Bottle bottle)
-        {
-            //string raw = Encoding.Default.GetString(args.Data).Trim('\0', ' ').ToString();
-            TickEventArgs e = new TickEventArgs();
-            e.Topic = $"取ってきたよ：{bottle.Item}=>{bottle.Data}";
-            //イベントの発生
-            OnTick(e);
-
         }
 
         public void StopConsumer()
