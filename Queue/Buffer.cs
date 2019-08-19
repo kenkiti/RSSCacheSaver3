@@ -7,7 +7,6 @@ using Model;
 
 namespace Queue
 {
-
     public class Buffer
     {
         //
@@ -74,7 +73,6 @@ namespace Queue
             }
             return bottle;
         }
-
     }
 
     public class BufferTick
@@ -145,6 +143,4 @@ namespace Queue
         }
 
     }
-
-
 }

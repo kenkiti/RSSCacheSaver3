@@ -12,6 +12,7 @@ using Database;
 using Queue;
 using Model;
 
+
 namespace RSSCacheSaver3
 {
     public partial class Form1 : Form
@@ -24,6 +25,7 @@ namespace RSSCacheSaver3
         private Queue.Buffer que = new Queue.Buffer(100);
         private Queue.BufferTick queTick = new Queue.BufferTick(100);
         private Thread _producer;
+        private Thread _bridge;
         private Thread _consumer;
 
         private delegate void SafeCallDelegate(string text);
@@ -44,16 +46,19 @@ namespace RSSCacheSaver3
 
             // Producer へは、キューと銘柄コードを渡す
             Producer producer = new Producer(que, arrayCodes);
-            Consumer consumer = new Consumer(que, db);
+            Bridge bridge = new Bridge(que, queTick);            
+            Consumer consumer = new Consumer(queTick, db);
 
             consumer.Tick += new Consumer.TickEventHandler(this.Consumer_OnTick);
 
             _producer = new Thread(producer.Produce);
+            _bridge = new Thread(bridge.Consume);
             _consumer = new Thread(consumer.Consume);
             _producer.Name = "Producer";
             _consumer.Name = "Consumer";
 
             _producer.Start();
+            _bridge.Start();
             _consumer.Start();
         }
 
@@ -71,6 +76,7 @@ namespace RSSCacheSaver3
             if (_producer != null)
             {
                 _producer.Abort();
+                _bridge.Abort();
                 _consumer.Abort();
             }
         }
@@ -120,7 +126,6 @@ namespace RSSCacheSaver3
         // 開始ボタン
         private void btnStart_Click(object sender, EventArgs e)
         {
-
             //Byte[] b = client.Request("銘柄名称", 1, 6000);
             //this.Text = Encoding.Default.GetString(b);
             Main();
@@ -138,7 +143,6 @@ namespace RSSCacheSaver3
             {
                 btnStart_Click(sender, e);
             }
-
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
