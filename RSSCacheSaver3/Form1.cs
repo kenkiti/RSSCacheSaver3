@@ -45,7 +45,7 @@ namespace RSSCacheSaver3
             Database.Database db = new Database.Database();
 
             // Producer へは、キューと銘柄コードを渡す
-            Producer producer = new Producer(que, arrayCodes);
+            Producer producer = new Producer(que, arrayCodes, this);
             //Bridge bridge = new Bridge(que, queTick);            
             Consumer consumer = new Consumer(que, db);
 
@@ -126,6 +126,8 @@ namespace RSSCacheSaver3
         // 開始ボタン
         private void btnStart_Click(object sender, EventArgs e)
         {
+            // TODO
+
             //Byte[] b = client.Request("銘柄名称", 1, 6000);
             //this.Text = Encoding.Default.GetString(b);
             Main();

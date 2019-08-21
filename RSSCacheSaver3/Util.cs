@@ -8,32 +8,32 @@ using NDde.Client;
 
 namespace RSSCacheSaver3
 {
-    internal class CurrentTimeGetter
-    {
-        private static int lastTicks = -1;
-        private static DateTime lastDateTime = DateTime.MinValue;
+    //internal class CurrentTimeGetter
+    //{
+    //    private static int lastTicks = -1;
+    //    private static DateTime lastDateTime = DateTime.MinValue;
 
-        /// <summary>        
-        /// Gets the current time in an optimized fashion.        
-        /// </summary>        
-        /// <value>Current time.</value>        
+    //    /// <summary>        
+    //    /// Gets the current time in an optimized fashion.        
+    //    /// </summary>        
+    //    /// <value>Current time.</value>        
 
-        public static DateTime Now
-        {
-            get
-            {
-                int tickCount = Environment.TickCount;
-                if (tickCount == lastTicks)
-                {
-                    return lastDateTime;
-                }
-                DateTime dt = DateTime.Now;
-                lastTicks = tickCount;
-                lastDateTime = dt;
-                return dt;
-            }
-        }
-    }
+    //    public static DateTime Now
+    //    {
+    //        get
+    //        {
+    //            int tickCount = Environment.TickCount;
+    //            if (tickCount == lastTicks)
+    //            {
+    //                return lastDateTime;
+    //            }
+    //            DateTime dt = DateTime.Now;
+    //            lastTicks = tickCount;
+    //            lastDateTime = dt;
+    //            return dt;
+    //        }
+    //    }
+    //}
 
     class Calculate
     {
@@ -112,10 +112,10 @@ namespace RSSCacheSaver3
     class Util
     {
 
-        private long prevVolume = 0;
-        private double preBid = 0;
-        private double preAsk = 0;
-        private long tick = 0;
+        //private long prevVolume = 0;
+        //private double preBid = 0;
+        //private double preAsk = 0;
+        //private long tick = 0;
 
 
         public Form1 f;

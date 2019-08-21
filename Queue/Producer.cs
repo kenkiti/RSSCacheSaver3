@@ -14,22 +14,24 @@ namespace Queue
         private string[] _codes;
         //
         // BOOLEAN TO MAKE THREAD KEEP ACTIVE
-        private bool _running;
+        //private bool _running;
 
         private DdeClient[] _client;
- 
+        private System.Windows.Forms.Form _form;
+
         //
         // CONSTRUCTOR
-        public Producer(Buffer buffer, string[] codes)
+        public Producer(Buffer buffer, string[] codes, System.Windows.Forms.Form f)
         {
             _buffer = buffer;
             _codes = codes;
+            _form = f;
         }
 
         public void Produce()
         {
             Console.WriteLine("producer runnning: ");
-            _running = true;
+            //_running = true;
 
             _client = new DdeClient[_codes.Length];
             var item = new RSSMapper().DictionaryItem;
@@ -43,10 +45,11 @@ namespace Queue
                 Console.WriteLine($"Start Advise：{_codes[i]}");
 
                 // 監視開始
-                _client[i] = new DdeClient("RSS", $"{_codes[i]}.T");
+                _client[i] = new DdeClient("RSS", $"{_codes[i]}.T", _form);
                     //_client[i] = new DdeClient("RSS", $"{_codes[i]}.T");
                     _client[i].Disconnected += new EventHandler<DdeDisconnectedEventArgs>(OnDisconnected);
                     _client[i].Connect();
+                    //_client[i].
                     foreach (string key in item.Keys)
                     {
                         _client[i].StartAdvise(key, 1, true, 60000);
@@ -56,7 +59,7 @@ namespace Queue
             }
             catch (Exception e)
             {
-                Console.WriteLine($"RSS起動してないのでは：{e}");
+                Console.WriteLine($"RSSに接続出来ませんでした：{e}");
                 throw;
             }
         }
@@ -79,7 +82,7 @@ namespace Queue
         {
             //
             // SETS THE BOOLEAN FOR WHILE LOOP
-            _running = false;
+            //_running = false;
             Console.WriteLine(
              "OnDisconnected: " +
              "IsServerInitiated=" + args.IsServerInitiated.ToString() + " " +

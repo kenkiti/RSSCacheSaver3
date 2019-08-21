@@ -29,8 +29,8 @@ namespace Database
     public class SQLite
     {
         private SQLiteConnection _connection;
-        private long _prevVolume = 0;
-        private long _tick = 0;
+        //private long _prevVolume = 0;
+        //private long _tick = 0;
 
         //private Dictionary<string, string> _item = new RSS().DictionaryItem;
 
